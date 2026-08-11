@@ -8,7 +8,7 @@ from concurrent.futures import ThreadPoolExecutor
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-# ─── Page Config ───────────────────────────────────────────────────────────────
+
 st.set_page_config(
     page_title="Movie Recommendation System",
     page_icon="🎬",
@@ -16,7 +16,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# ─── SPEED FIX 1: Reuse HTTP Session ──────────────────────────────────────────
+
 @st.cache_resource
 def get_session():
     session = requests.Session()
@@ -26,7 +26,7 @@ def get_session():
     session.mount('https://', adapter)
     return session
 
-# ─── Custom CSS ────────────────────────────────────────────────────────────────
+
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap');
@@ -301,7 +301,7 @@ def load_data():
     return movies_df, similarity
 
 
-# ─── SPEED FIX 3: Cache Posters for 24hrs ─────────────────────────────────────
+
 @st.cache_data(show_spinner=False, ttl=86400)
 def fetch_poster(movie_id):
     try:
@@ -318,7 +318,7 @@ def fetch_poster(movie_id):
     return "https://via.placeholder.com/342x513/1a1a2e/c9a84c?text=No+Poster"
 
 
-# ─── SPEED FIX 6: Parallel Poster Fetching ────────────────────────────────────
+
 def recommend(movie_name, movies_df, similarity):
     movie_index = movies_df[movies_df["title"] == movie_name].index[0]
     distance = similarity[movie_index]
@@ -341,10 +341,9 @@ def recommend(movie_name, movies_df, similarity):
     return names, posters
 
 
-# ─── SPEED FIX 7: Load Data Once at Startup ───────────────────────────────────
 movies_df, similarity = load_data()
 
-# ─── Hero ──────────────────────────────────────────────────────────────────────
+
 st.markdown("""
 <div class="hero">
     <div class="hero-title">MOVIE <span>Recommendation</span> SYSTEM</div>
@@ -352,7 +351,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# ─── Search ────────────────────────────────────────────────────────────────────
+
 _, center, _ = st.columns([1, 2, 1])
 
 with center:
@@ -364,7 +363,7 @@ with center:
     )
     recommend_btn = st.button("Discover Similar Films")
 
-# ─── Results ───────────────────────────────────────────────────────────────────
+
 if recommend_btn:
     if selected_movie == "— Select a Movie —":
         st.warning("Please select a movie to get recommendations.")
@@ -385,7 +384,7 @@ if recommend_btn:
         </div>
         """, unsafe_allow_html=True)
 
-        # ── Row 1 ──
+   
         cols = st.columns(5)
         for idx in range(5):
             with cols[idx]:
@@ -419,7 +418,7 @@ if recommend_btn:
 
         st.markdown('<div class="gold-divider"></div>', unsafe_allow_html=True)
 
-# ─── Footer ────────────────────────────────────────────────────────────────────
+
 st.markdown("""
 <div class="footer">
     Movie Recommendation System — Powered by TMDB & Machine Learning
